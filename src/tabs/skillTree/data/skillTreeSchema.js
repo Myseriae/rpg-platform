@@ -1,0 +1,1 @@
+// skillTreeSchema.js placeholder

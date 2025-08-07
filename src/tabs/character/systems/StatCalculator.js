@@ -1,0 +1,1 @@
+// StatCalculator.js placeholder

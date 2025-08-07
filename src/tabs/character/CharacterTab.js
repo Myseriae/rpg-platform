@@ -1,0 +1,1 @@
+// CharacterTab.js placeholder

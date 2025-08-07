@@ -1,0 +1,1 @@
+// spellSchema.js placeholder

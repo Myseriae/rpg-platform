@@ -1,0 +1,1 @@
+// SkillManager.js placeholder

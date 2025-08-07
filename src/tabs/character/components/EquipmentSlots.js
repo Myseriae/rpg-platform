@@ -1,0 +1,1 @@
+// EquipmentSlots.js placeholder

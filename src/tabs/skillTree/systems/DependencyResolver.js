@@ -1,0 +1,1 @@
+// DependencyResolver.js placeholder

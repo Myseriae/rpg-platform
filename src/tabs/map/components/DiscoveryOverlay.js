@@ -1,0 +1,1 @@
+// DiscoveryOverlay.js placeholder

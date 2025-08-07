@@ -1,0 +1,1 @@
+// SkillConnections.js placeholder

@@ -1,0 +1,1 @@
+// LoadoutManager.js placeholder

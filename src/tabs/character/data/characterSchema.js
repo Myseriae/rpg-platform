@@ -1,0 +1,1 @@
+// characterSchema.js placeholder

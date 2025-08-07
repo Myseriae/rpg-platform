@@ -1,0 +1,1 @@
+// WorldMap.js placeholder

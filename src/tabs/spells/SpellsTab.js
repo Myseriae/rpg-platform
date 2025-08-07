@@ -1,0 +1,1 @@
+// SpellsTab.js placeholder

@@ -1,0 +1,1 @@
+// SpellValidator.js placeholder

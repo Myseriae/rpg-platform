@@ -1,0 +1,1 @@
+// InventoryGrid.js placeholder
