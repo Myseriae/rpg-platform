@@ -1,1 +1,25 @@
 // index.html placeholder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPG Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar"><!-- Sidebar with tab buttons -->
+      <button id="tab-map">Map</button>
+      <button id="tab-character">Character</button>
+      <button id="tab-spells">Spells</button>
+      <button id="tab-fighter">Fighter</button>
+      <button id="tab-skilltree">Skill Tree</button>
+    </div>
+    <div class="content" id="content"><!-- Main content area -->
+      <!-- Active tab content will appear here -->
+    </div>
+  </div>
+  <script type="module" src="src/main.js"></script> <!-- Load the main JS module -->
+</body>
+</html>
