@@ -1,14 +1,24 @@
-// SkillTreeTab.js placeholder
 /**
- * SkillTreeTab module - handles the skill tree tab content.
- * Currently a stub that logs its initialization and shows how to access state.
+ * SkillTreeTab - placeholder for a skill graph with unlocks.
+ * Later: render nodes/edges (SVG or canvas), handle prerequisites and unlock.
  */
-import stateManager from "../../core/StateManager.js";
+import state from "../../core/StateManager.js";
 
 export default class SkillTreeTab {
   constructor() {
-    // Log initialization and some state data
-    console.log(`SkillTreeTab initialized (Available Skill Points: ${stateManager.player.skillPoints})`);
-    // TODO: Implement skill tree UI rendering and skill unlock logic here
+    this.root = document.createElement("div");
+    this.root.className = "tab tab--skilltree";
+    this.root.innerHTML = `
+      <h2>Skill Tree</h2>
+      <p>Available Skill Points: <strong>${state.player.skillPoints}</strong></p>
+      <div class="skilltree" style="height:240px;border:1px dashed #999;display:flex;align-items:center;justify-content:center;">
+        <span>🌳 Skill nodes go here</span>
+      </div>
+    `;
+    // TODO: Build TreeRenderer + SkillManager; click nodes -> unlock if prerequisites satisfied.
+  }
+
+  mount() {
+    return this.root;
   }
 }
