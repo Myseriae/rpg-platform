@@ -1,25 +1,30 @@
-// index.html placeholder
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RPG Game</title>
+  <title>RPG App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Base styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- App layout: sidebar + content -->
   <div class="container">
-    <div class="sidebar"><!-- Sidebar with tab buttons -->
+    <aside class="sidebar">
+      <!-- NOTE: button ids match tab ids used in JS -->
       <button id="tab-map">Map</button>
       <button id="tab-character">Character</button>
       <button id="tab-spells">Spells</button>
       <button id="tab-fighter">Fighter</button>
       <button id="tab-skilltree">Skill Tree</button>
-    </div>
-    <div class="content" id="content"><!-- Main content area -->
-      <!-- Active tab content will appear here -->
-    </div>
+    </aside>
+
+    <main id="content" class="content">
+      <!-- main.js mounts each tab's DOM here via .mount() -->
+    </main>
   </div>
-  <script type="module" src="src/main.js"></script> <!-- Load the main JS module -->
+
+  <!-- Load app code -->
+<script type="module" src="./src/main.js"></script>
 </body>
 </html>

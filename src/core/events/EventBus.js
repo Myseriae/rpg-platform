@@ -1,67 +1,47 @@
-// EventBus.js placeholder
 /**
- * EventBus - a simple publish/subscribe system for decoupled communication.
- * Allows different parts of the app to communicate without direct references.
+ * EventBus: lightweight publish/subscribe hub.
+ * - .on(event, cb)     -> subscribe
+ * - .emit(event, data) -> broadcast
+ * - .off(event, cb?)   -> unsubscribe one or all
+ *
+ * Why: Decouples modules. Tabs, systems, and UI can talk via events
+ * without holding references to each other.
  */
 class EventBus {
   constructor() {
-    // Map to hold event names (keys) and arrays of subscriber callbacks (values)
-    this.listeners = new Map();
+    this.listeners = new Map(); // event -> [callbacks]
   }
 
-  /**
-   * Subscribe to an event by providing an event name and callback function.
-   * The callback will be invoked whenever the event is emitted.
-   */
-  on(event, callback) {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, []);
-    }
-    this.listeners.get(event).push(callback);
+  on(event, cb) {
+    if (!this.listeners.has(event)) this.listeners.set(event, []);
+    this.listeners.get(event).push(cb);
   }
 
-  /**
-   * Unsubscribe a callback from an event.
-   * If no callback is provided, removes all callbacks for that event.
-   */
-  off(event, callback) {
+  off(event, cb) {
     if (!this.listeners.has(event)) return;
-    if (!callback) {
-      // Remove all listeners for this event
-      this.listeners.delete(event);
-    } else {
-      // Remove the specific callback from the listeners
-      const callbacks = this.listeners.get(event).filter(cb => cb !== callback);
-      if (callbacks.length > 0) {
-        this.listeners.set(event, callbacks);
-      } else {
-        this.listeners.delete(event);
-      }
-    }
+    if (!cb) { this.listeners.delete(event); return; }
+    const arr = this.listeners.get(event).filter(fn => fn !== cb);
+    if (arr.length) this.listeners.set(event, arr);
+    else this.listeners.delete(event);
   }
 
-  /**
-   * Emit an event, invoking all subscribed callbacks with the provided data.
-   * The data can be any value or object (use object for multiple parameters).
-   */
   emit(event, data = {}) {
     if (!this.listeners.has(event)) return;
-    for (const callback of this.listeners.get(event)) {
-      try {
-        callback(data);
-      } catch (err) {
-        console.error(`EventBus error in "${event}" listener:`, err);
-      }
+    for (const cb of this.listeners.get(event)) {
+      try { cb(data); } catch (e) { console.error('EventBus listener error:', e); }
     }
   }
 }
 
-// Create a single global EventBus instance and export it
+// Single shared instance for the whole app
 const eventBus = new EventBus();
 export default eventBus;
 
-/* Example usage:
-   eventBus.on('player:levelUp', data => console.log('Player leveled up to', data.newLevel));
-   eventBus.emit('player:levelUp', { newLevel: 2 });
-   // In this app, eventBus is used for tab switching events (see src/main.js).
-*/
+// OPTIONAL: centralized event names to avoid typos
+export const EVENTS = {
+  TAB_CHANGED: 'tab:changed',
+  INVENTORY_UPDATED: 'inventory:updated',
+  SPELL_CAST: 'spell:cast',
+  COMBAT_ACTION: 'combat:action',
+  SKILL_UNLOCKED: 'skill:unlocked',
+};

@@ -1,52 +1,62 @@
-/**
- * CharacterTab - shows player stats and inventory placeholder.
- * Later: split into StatsPanel, InventoryGrid, EquipmentSlots components.
- */
-import state from "../../core/StateManager.js";
+import state from "../../core/state/StateManager.js";
 
 export default class CharacterTab {
   constructor() {
-    this.root = document.createElement("div");
-    this.root.className = "tab tab--character";
-    this.root.innerHTML = `
-      <h2>Character</h2>
-      <div id="stats"></div>
-
-      <h3>Inventory</h3>
-      <div style="margin: 8px 0;">
-        <input id="newItem" placeholder="Add item..." />
-        <button id="addItemBtn">Add</button>
+    this.root=document.createElement('div');
+    this.root.className='tab tab--character';
+    this.root.innerHTML=`
+      <div class="section">
+        <h2>Character</h2>
+        <div class="char-top">
+          <div class="char-portrait"
+               style="background-image:url('https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=600');"></div>
+          <div>
+            <p><strong>${state.player.name}</strong> (Lv ${state.player.level})</p>
+            <p>HP: ${state.player.hp} &nbsp; MP: ${state.player.mp}</p>
+            <div>
+              <input id="newItem" placeholder="Add inventory item..." />
+              <button id="addItemBtn">Add</button>
+            </div>
+            <ul id="invList"></ul>
+          </div>
+        </div>
       </div>
-      <ul id="inv" style="padding-left: 18px;"></ul>
+      <div class="section">
+        <h3>Equipment</h3>
+        <p>Drag an inventory item into a slot.</p>
+        <div class="grid" id="equipGrid"></div>
+      </div>
     `;
+    this.invList=this.root.querySelector('#invList');
+    this.equipGrid=this.root.querySelector('#equipGrid');
 
-    // Initial render
-    this.render();
-
-    // Wire up a tiny interaction to demo state usage
-    this.root.querySelector("#addItemBtn").addEventListener("click", () => {
-      const input = this.root.querySelector("#newItem");
-      const val = input.value.trim();
-      if (val) {
-        state.addItemToInventory(val);
-        input.value = "";
-        this.render(); // simple, direct re-render for now
-      }
+    for(let i=0;i<9;i++){
+      const slot=document.createElement('div');
+      slot.className='slot'; slot.dataset.slotIndex=i;
+      slot.addEventListener('dragover', e=>{ e.preventDefault(); slot.classList.add('highlight'); });
+      slot.addEventListener('dragleave', ()=>slot.classList.remove('highlight'));
+      slot.addEventListener('drop', e=>{
+        e.preventDefault(); slot.classList.remove('highlight');
+        const name=e.dataTransfer.getData('text/plain'); if(!name) return;
+        state.equip(+slot.dataset.slotIndex, name);
+        this.render();
+      });
+      this.equipGrid.appendChild(slot);
+    }
+    this.root.querySelector('#addItemBtn').addEventListener('click', ()=>{
+      const input=this.root.querySelector('#newItem'); const val=input.value.trim();
+      if(val){ state.addItem(val); input.value=''; this.render(); }
     });
+    this.render();
   }
-
-  render() {
-    // Stats
-    this.root.querySelector("#stats").textContent =
-      `${state.player.name} (Lv ${state.player.level})  HP: ${state.player.hp}  MP: ${state.player.mp}`;
-
-    // Inventory
-    this.root.querySelector("#inv").innerHTML =
-      state.inventory.map(i => `<li>${i}</li>`).join("");
+  makeItem(name){
+    const it=document.createElement('div'); it.className='item'; it.textContent=name; it.draggable=true;
+    it.addEventListener('dragstart', e=> e.dataTransfer.setData('text/plain', name));
+    return it;
   }
-
-  mount() {
-    // In a more complex setup, you might (re)attach listeners or timers here
-    return this.root;
+  render(){
+    this.invList.innerHTML=''; state.inventory.forEach(name=>{ const li=document.createElement('li'); li.appendChild(this.makeItem(name)); this.invList.appendChild(li); });
+    [...this.equipGrid.children].forEach((slot,idx)=>{ slot.innerHTML=''; const it=state.equipment[idx]; if(it) slot.appendChild(this.makeItem(it)); });
   }
+  mount(){ return this.root; }
 }

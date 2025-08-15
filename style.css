@@ -1,41 +1,191 @@
-/* Basic styling for the RPG app: sidebar and main content layout */
-body {
+/* --- Layout --- */
+html, body {
+  height: 100%;
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: system-ui, Arial, sans-serif;
 }
+
 .container {
   display: flex;
-  height: 100vh; /* Full viewport height for the app */
+  height: 100vh;
 }
+
+/* Sidebar ~15% width of viewport, full height */
 .sidebar {
-  width: 180px;
-  background-color: #333;
-  color: #fff;
-  padding: 10px;
+  width: 15vw;
+  height: 100vh;
+  background: #222;
+  display: flex;
+  flex-direction: column;
 }
-/* Style the sidebar buttons */
+
+/* Each button ~15% of viewport height, centered text */
 .sidebar button {
-  display: block;
-  width: 100%;
-  margin: 5px 0;
-  padding: 10px;
-  font: inherit; /* use page font */
-  background: #444;
-  color: #fff;
+  flex: 0 0 15vh;            /* fixed height: 15% of viewport height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
   border: none;
-  text-align: left;
+  background: #333;
+  color: #fff;
   cursor: pointer;
+  transition: background 0.2s;
 }
-.sidebar button:hover {
+.sidebar button:hover,
+.sidebar button.active {
   background: #555;
 }
-/* Highlight the active tab button */
-.sidebar button.active {
-  background: #666;
-}
+
+/* Content area fills the rest */
 .content {
   flex: 1;
-  padding: 20px;
-  background: #f4f4f4;
-  color: #000;
+  background: #f6f6f6;
+  padding: 16px;
+  overflow: auto;
 }
+
+/* --- Utility visuals --- */
+.section {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+/* Map: container clips overflow, image scales and pans */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  overflow: hidden;            /* hide image outside bounds */
+  border: 1px dashed #999;
+  background: #eee;
+}
+.map-img {
+  position: absolute;
+  transform-origin: 0 0;       /* scale around top-left, easier math */
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;        /* image itself doesn't capture events; container does */
+}
+
+/* Character tab */
+.char-top {
+  display: flex;
+  gap: 16px;
+}
+.char-portrait {
+  width: 180px;
+  height: 240px;
+  background: #ccc center/cover no-repeat;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+}
+
+/* Equipment grid (3x3) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  grid-template-rows: repeat(3, 72px);
+  gap: 8px;
+}
+.slot {
+  width: 72px;
+  height: 72px;
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slot.highlight {
+  border-color: #3b82f6;
+}
+.item {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  background: linear-gradient(#eee,#ddd);
+  border: 1px solid #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+.item:active { cursor: grabbing; }
+
+/* Spells */
+.spell-lists {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+}
+.spell-card {
+  border: 1px solid #bbb;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+.loadout {
+  border: 1px solid #bbb;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px;
+}
+.loadout .slot {
+  width: 100%;
+  height: 48px;
+}
+
+/* Fighter grid (10x10) */
+.battle-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 48px);
+  grid-template-rows: repeat(10, 48px);
+  gap: 2px;
+  background: #ccc;
+  padding: 2px;
+  width: max-content;
+}
+.cell {
+  width: 48px;
+  height: 48px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  position: relative;
+}
+.token {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  position: absolute;
+  left: 4px; top: 4px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: bold;
+  cursor: grab;
+}
+.token.hero { background: #22c55e; }    /* green */
+.token.mob  { background: #ef4444; }    /* red */
+.cell.highlight { outline: 2px solid #3b82f6; outline-offset: -2px; }
+
+/* Skill tree */
+.tree {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, 140px);
+}
+.skill {
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+  border: 2px solid #aaa;
+  background: #fff;
+  user-select: none;
+}
+.skill.locked   { opacity: 0.5; background: #f5f5f5; }
+.skill.unlocked { border-color: #22c55e; }
+.skill.available{ border-color: #3b82f6; cursor: pointer; }
